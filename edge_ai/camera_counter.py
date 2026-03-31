@@ -7,6 +7,8 @@ import os
 # --- Configuration ---
 # Use 'export BACKEND_URL=https://your-api.com' to point to the cloud
 BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:8000")
+# Use 'export CAMERA_ID=1' for external webcam, 0 for internal
+CAMERA_ID = int(os.getenv("CAMERA_ID", "0"))
 UPDATE_INTERVAL = 2 
 
 def check_backend():
@@ -25,21 +27,25 @@ def check_backend():
 hog = cv2.HOGDescriptor()
 hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
 
-# Start video capture (Laptop Webcam)
-cap = cv2.VideoCapture(0)
+# Start video capture
+print(f"Initializing camera at index {CAMERA_ID}...")
+cap = cv2.VideoCapture(CAMERA_ID)
 
 if not cap.isOpened():
-    print("Error: Could not open laptop webcam.")
+    print(f"Error: Could not open webcam at index {CAMERA_ID}.")
+    if CAMERA_ID == 0:
+        print("Tip: If you have an external webcam, try running: export CAMERA_ID=1")
     sys.exit(1)
 
 check_backend()
-print("KlinikIQ Laptop Edge Node: Camera Counter Active...")
+print(f"KlinikIQ Edge Node [GQEBERHA]: Active using camera index {CAMERA_ID}...")
 last_update_time = time.time()
 
 try:
     while True:
         ret, frame = cap.read()
         if not ret:
+            print("Error: Could not read frame from camera.")
             break
 
         # Resize for faster processing
@@ -57,7 +63,7 @@ try:
                     cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
         # Show the camera feed
-        cv2.imshow('KlinikIQ - Laptop Edge Node [GQEBERHA]', frame)
+        cv2.imshow('KlinikIQ - Edge Node Monitoring', frame)
 
         # Update backend periodically
         current_time = time.time()
