@@ -1,10 +1,12 @@
-from fastapi import FastAPI, HTTPException, BackgroundTasks
+from fastapi import FastAPI, HTTPException, BackgroundTasks, Query, Form, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Dict
 import datetime
 import random
 import time
+import asyncio
+from twilio.twiml.messaging_response import MessagingResponse
 
 app = FastAPI(title="KlinikIQ API", version="1.1.0")
 
@@ -36,11 +38,11 @@ class RestockAgent:
     async def run_reasoning(self, item_name: str):
         # Mock multi-step reasoning process
         log_entry(f"[AGENT] Analyzing stock trend for {item_name}...")
-        time.sleep(1)
+        await asyncio.sleep(1)
         log_entry(f"[AGENT] Low stock confirmed. Checking district pharmacy availability...")
-        time.sleep(1)
+        await asyncio.sleep(1)
         log_entry(f"[AGENT] District pharmacy has surplus. Generating restocking request...")
-        time.sleep(1)
+        await asyncio.sleep(1)
         log_entry(f"[AGENT] RESTOCK TRIGGERED: 100 units of {item_name} requested.")
 
 agent = RestockAgent()
@@ -53,8 +55,12 @@ def log_entry(msg: str):
 
 # --- API Endpoints ---
 
+@app.get("/")
+async def root():
+    return {"message": "KlinikIQ API is running", "version": "1.1.0"}
+
 @app.post("/queue/update")
-async def update_queue(count: int):
+async def update_queue(count: int = Query(...)):
     state["patient_count"] = count
     log_entry(f"[EDGE] Camera feed update: {count} patients detected")
     return {"status": "success", "new_count": count}
@@ -78,6 +84,55 @@ async def predict_wait():
     # Placeholder for scikit-learn model
     wait_time = state["patient_count"] * 3.5
     return {"wait_minutes": int(wait_time)}
+
+# --- WhatsApp Integration ---
+
+@app.post("/whatsapp")
+async def whatsapp_webhook(Body: str = Form(...), From: str = Form(...)):
+    """
+    Webhook for WhatsApp messages.
+    Patients can text 'status', 'wait', or 'hello' to get clinic info.
+    """
+    incoming_msg = Body.lower().strip()
+    resp = MessagingResponse()
+    msg = resp.message()
+
+    if "status" in incoming_msg or "how busy" in incoming_msg:
+        count = state["patient_count"]
+        capacity = 40
+        occupancy = int((count / capacity) * 100) if count > 0 else 0
+        status_text = "🟢 Calm" if occupancy < 40 else "🟡 Moderate" if occupancy < 80 else "🔴 Very Busy"
+        
+        response_text = (
+            f"🏥 *KlinikIQ Status Report*\n\n"
+            f"📍 *Clinic:* {state['clinic_id']}\n"
+            f"👥 *Active Patients:* {count}\n"
+            f"📊 *Occupancy:* {occupancy}%\n"
+            f"🚦 *Current Pace:* {status_text}\n\n"
+            f"Type 'wait' to get estimated wait time."
+        )
+        msg.body(response_text)
+
+    elif "wait" in incoming_msg or "time" in incoming_msg:
+        wait_min = int(state["patient_count"] * 3.5)
+        response_text = (
+            f"⏳ *Estimated Wait Time*\n\n"
+            f"The current estimated wait time at *{state['clinic_id']}* is approximately *{wait_min} minutes*.\n\n"
+            f"Stay safe!"
+        )
+        msg.body(response_text)
+
+    else:
+        response_text = (
+            f"👋 Welcome to *KlinikIQ Smart Clinic Assistant*!\n\n"
+            f"I can help you check how busy the clinic is before you visit.\n\n"
+            f"Reply with:\n"
+            f"👉 *'status'* - To see current occupancy\n"
+            f"👉 *'wait'* - To get estimated wait time"
+        )
+        msg.body(response_text)
+
+    return Response(content=str(resp), media_type="application/xml")
 
 if __name__ == "__main__":
     import uvicorn

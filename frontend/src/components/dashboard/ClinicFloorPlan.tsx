@@ -1,6 +1,7 @@
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Html } from "@react-three/drei";
 import * as THREE from "three";
+import { useClinicData } from "@/hooks/use-clinic-data";
 
 const HolographicRoom = ({
   position,
@@ -56,6 +57,9 @@ const GridFloor = () => (
 );
 
 const ClinicFloorPlan = () => {
+  const { status } = useClinicData();
+  const lobbyOccupancy = status ? Math.round((status.patient_count / 40) * 100) : 0;
+
   return (
     <div className="absolute inset-0 z-0">
       <Canvas
@@ -72,7 +76,7 @@ const ClinicFloorPlan = () => {
           position={[-2, 0, -1]}
           size={[8, 3, 6]}
           label="QueueSense Lobby"
-          occupancy="78% Occupied"
+          occupancy={`${status?.patient_count ?? 0} Patients (${lobbyOccupancy}%)`}
           color="#2563eb"
         />
 
