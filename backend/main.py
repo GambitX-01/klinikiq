@@ -20,14 +20,21 @@ app.add_middleware(
 
 # --- Mock Database ---
 state = {
-    "clinic_id": "HQ-MAHIKENG-01",
+    "clinic_id": "HQ-GQEBERHA-01",
+    "clinic_name": "Gqeberha Central Health Node",
     "patient_count": 22,
     "inventory": [
         {"id": "INS-S2", "name": "Insulin (Human)", "level": 25, "status": "CRITICAL"},
         {"id": "ARV-TR", "name": "ARV (Tenofovir)", "level": 85, "status": "STABLE"},
         {"id": "ANL-S1", "name": "Painkillers", "level": 55, "status": "MONITORING"}
     ],
-    "logs": ["[SYS] Agentic AI Initialization Complete", "[DB] Linked to Mahikeng Central Node"]
+    "district_stats": [
+        {"suburb": "Motherwell", "occupancy": 88, "status": "CRITICAL"},
+        {"suburb": "New Brighton", "occupancy": 65, "status": "MODERATE"},
+        {"suburb": "Korsten", "occupancy": 42, "status": "STABLE"},
+        {"suburb": "Walmer", "occupancy": 31, "status": "STABLE"}
+    ],
+    "logs": ["[SYS] Agentic AI Initialization Complete", "[DB] Linked to Nelson Mandela Bay Central Node"]
 }
 
 # --- Agentic AI Logic ---
@@ -128,7 +135,8 @@ async def whatsapp_webhook(Body: str = Form(...), From: str = Form(...)):
             f"I can help you check how busy the clinic is before you visit.\n\n"
             f"Reply with:\n"
             f"👉 *'status'* - To see current occupancy\n"
-            f"👉 *'wait'* - To get estimated wait time"
+            f"👉 *'wait'* - To get estimated wait time\n\n"
+            f"⚠️ *Privacy Notice (POPIA):* By using this service, you agree to our privacy policy. We do not store your name or medical history. Your number is only used to provide real-time clinic updates."
         )
         msg.body(response_text)
 

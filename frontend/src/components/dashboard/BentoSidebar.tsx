@@ -123,6 +123,31 @@ const SystemFeed = ({ logs }: { logs?: string[] }) => {
   );
 };
 
+const DistrictOverviewCard = ({ stats }: { stats?: any[] }) => (
+  <motion.div variants={item} className="glass-card p-5">
+    <div className="flex items-center gap-2 mb-3">
+      <TrendingUp className="w-4 h-4 text-primary" />
+      <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">District Overview (Gqeberha)</span>
+    </div>
+    <div className="space-y-3">
+      {(stats ?? []).map((s) => (
+        <div key={s.suburb} className="flex items-center justify-between">
+          <span className="text-xs font-medium text-foreground">{s.suburb}</span>
+          <div className="flex items-center gap-3 w-32">
+            <div className="flex-1 h-1.5 rounded-full bg-muted overflow-hidden">
+              <div 
+                className={`h-full rounded-full ${s.status === 'CRITICAL' ? 'bg-destructive' : s.status === 'MODERATE' ? 'bg-warning' : 'bg-success'}`}
+                style={{ width: `${s.occupancy}%` }}
+              />
+            </div>
+            <span className="text-[10px] font-mono text-muted-foreground w-6 text-right">{s.occupancy}%</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  </motion.div>
+);
+
 const BentoSidebar = () => {
   const { status, waitTime, triggerRestock, isLoading, isError } = useClinicData();
 
@@ -154,6 +179,7 @@ const BentoSidebar = () => {
         <SmallStatCard icon={Clock} label="Wait Time" value={waitTime ?? "--"} unit="min" color="#2563eb" />
         <SmallStatCard icon={Zap} label="Node Sync" value="8.4" unit="ms latency" color="#10b981" />
       </div>
+      <DistrictOverviewCard stats={status?.district_stats} />
       <PharmacyAlertCard 
         inventory={status?.inventory} 
         onRestock={(id) => triggerRestock.mutate(id)}

@@ -14,7 +14,7 @@ const DashboardHeader = () => {
           <div className="h-5 w-px bg-border mx-2" />
           <div className="flex items-center gap-1.5 text-muted-foreground">
             <MapPin className="w-3.5 h-3.5" />
-            <span className="text-sm font-medium">Mahikeng Central Clinic</span>
+            <span className="text-sm font-medium">Gqeberha Central Health Node</span>
           </div>
         </div>
 
