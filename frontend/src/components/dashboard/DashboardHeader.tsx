@@ -3,7 +3,7 @@ import { MapPin, Activity, Wifi } from "lucide-react";
 const DashboardHeader = () => {
   return (
     <header className="fixed top-4 left-4 right-4 z-50">
-      <div className="glass-card px-6 py-3 flex items-center justify-between" style={{ borderRadius: '2rem' }}>
+      <div className="glass-card rounded-[2rem] px-6 py-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center">
@@ -19,7 +19,7 @@ const DashboardHeader = () => {
         </div>
 
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 glass-card-sm px-4 py-1.5" style={{ borderRadius: '1rem' }}>
+          <div className="flex items-center gap-2 glass-card-sm rounded-2xl px-4 py-1.5">
             <div className="relative flex items-center justify-center w-2.5 h-2.5">
               <span className="absolute inline-flex h-full w-full rounded-full bg-success opacity-75 animate-ping" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-success" />

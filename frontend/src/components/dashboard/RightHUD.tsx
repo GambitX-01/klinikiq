@@ -3,7 +3,7 @@ import { Layers, Cpu } from "lucide-react";
 
 const RightHUD = () => {
   return (
-    <div className="fixed bottom-4 right-4 z-30 flex flex-col gap-3 w-64">
+    <div className="fixed bottom-4 right-4 z-30 flex flex-col gap-3 w-56">
       {/* Edge Context */}
       <motion.div
         initial={{ opacity: 0, x: 20 }}
@@ -11,21 +11,21 @@ const RightHUD = () => {
         transition={{ delay: 0.6, duration: 0.5 }}
         className="glass-card-sm p-4"
       >
-        <div className="flex items-center gap-2 mb-2">
+        <div className="flex items-center gap-2 mb-3">
           <Cpu className="w-3.5 h-3.5 text-primary" />
           <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Edge Context</span>
         </div>
-        <div className="space-y-1.5 text-xs text-muted-foreground">
-          <div className="flex justify-between">
-            <span>Protocol</span>
+        <div className="space-y-2 text-xs">
+          <div className="flex justify-between items-center">
+            <span className="text-muted-foreground">Protocol</span>
             <span className="font-mono font-medium text-foreground">MQTT v5</span>
           </div>
-          <div className="flex justify-between">
-            <span>Cluster</span>
+          <div className="flex justify-between items-center">
+            <span className="text-muted-foreground">Cluster</span>
             <span className="font-mono font-medium text-foreground">SA-NW-01</span>
           </div>
-          <div className="flex justify-between">
-            <span>Uptime</span>
+          <div className="flex justify-between items-center">
+            <span className="text-muted-foreground">Uptime</span>
             <span className="font-mono font-medium text-success">99.97%</span>
           </div>
         </div>
@@ -44,11 +44,11 @@ const RightHUD = () => {
         </div>
         <div className="space-y-2">
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-sm bg-primary/30 border border-primary/50" />
+            <div className="w-3 h-3 rounded-sm bg-primary/30 border border-primary/50 shrink-0" />
             <span className="text-xs text-foreground font-medium">QueueSense Lobby</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-sm bg-success/30 border border-success/50" />
+            <div className="w-3 h-3 rounded-sm bg-success/30 border border-success/50 shrink-0" />
             <span className="text-xs text-foreground font-medium">MediTrack Pharmacy</span>
           </div>
         </div>

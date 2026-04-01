@@ -1,8 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
 
 @layer base {
   :root {
@@ -23,6 +26,7 @@
 
     --muted: 222 47% 15%;
     --muted-foreground: 215 20.2% 65.1%;
+    
 
     --accent: 217 91% 60%;
     --accent-foreground: 210 40% 98%;
@@ -89,11 +93,11 @@
   }
 
   .glass-hover {
-    @apply transition-all duration-300;
+    @apply transition-all duration-300 ease-out;
   }
   .glass-hover:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 40px rgba(37, 99, 235, 0.12), var(--glass-shadow);
+    transform: translateY(-1px);
+    box-shadow: 0 16px 48px rgba(37, 99, 235, 0.1), var(--glass-shadow);
   }
 
   .pulse-dot {
@@ -124,4 +128,13 @@
 
 .animate-float {
   animation: float 4s ease-in-out infinite;
+}
+
+/* Scrollbar hide utility */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
