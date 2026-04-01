@@ -77,7 +77,7 @@ if not stream.isOpened():
     sys.exit(1)
 
 check_backend()
-print("KlinikIQ Laptop Edge Node: Camera Counter Active...")
+print(f"KlinikIQ Edge Node [GQEBERHA]: Active using camera index {CAMERA_ID}...")
 last_update_time = time.time()
 person_count = 0
 frame_idx = 0
